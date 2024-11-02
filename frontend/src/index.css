@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scroll-none::-webkit-scrollbar{
+   display: none;
+   scroll-behavior: smooth;
+   scrollbar-color: white;
+}
