@@ -30,7 +30,7 @@ const signUp = async (req, res) => {
 
 const Login = async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body)
+  
   try {
     const user = await User.findOne({ email });
     const verifyPassword = await bcrypt.compare(password, user.password);
@@ -52,7 +52,7 @@ const logout=async (req,res)=>{
         res.clearCookie('token')
         res.status(200).json('user logout successfully')
     } catch (error) {
-        
+         res.status(400).json({ message: error.message });
     }
 }
 
