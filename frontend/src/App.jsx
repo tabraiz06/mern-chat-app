@@ -8,18 +8,31 @@ import Right from "./components/right/Right";
 import Left2 from "./components/left/left2/Left2";
 import Register from "./components/credentials/Register";
 import Login from "./components/credentials/Login";
+import { contextApi } from "./context/AuthPrivider";
+import HomePage from "./pages/HomePage";
 
 function App() {
+  const {authUser}= contextApi()
   return (
-    <div className="h-screen flex w-full overflow-hidden scroll-none">
-      {/* <Left2 />
-      <Left />
-      <Right /> */}
-      <BrowserRouter>
-      {/* <Register/> */}
-      <Login/>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            authUser ? (
+              <HomePage />
+                
+              
+            ) : (
+              <Login />
+            )
+          }
+        />
+    <Route path="/register" element={<Register/>}/>
+    <Route path="/login" element={<Login/>}/>
+      </Routes>
+      {/*  */}
+    </BrowserRouter>
   );
 }
 

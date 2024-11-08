@@ -3,7 +3,7 @@ import User from "./User";
 
 const Users = () => {
   return (
-    <div className="max-h-[92vh] overflow-y-scroll scroll-none" id="users">
+    <div className="max-h-[78vh] overflow-y-scroll scroll-none" id="users">
       <User />
       <User />
       <User />
