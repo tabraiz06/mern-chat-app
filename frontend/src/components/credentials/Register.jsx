@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { contextApi } from "../../context/AuthPrivider";
 
 const Register = () => {
   const { authUser, setAuthUser } = contextApi();
-
+  const [image, setImage] = useState(null);
+  const [imgFile, setImgFile] = useState(null);
   console.log(authUser);
   const [userDetails, setUserDetails] = useState({
     name: "",
@@ -16,23 +17,45 @@ const Register = () => {
   const handleChange = (e) => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
+
+  const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setImgFile(selectedFile);
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(userDetails)
+      const formData = new FormData();
+      formData.append("name", userDetails.name);
+      formData.append("email", userDetails.email);
+      formData.append("phone", userDetails.phone);
+      formData.append("password", userDetails.password);
+
+      formData.append("pic", imgFile);
+      
       const res = await fetch("http://localhost:5000/api/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userDetails),
+        
+        body: formData,
       });
       const result = await res.json();
       console.log(result);
       if (res.ok) {
         navigate("/");
-        localStorage.setItem('user',result.newUser)
-        setAuthUser(result.newUser)
+        localStorage.setItem("token", result.Token);
+        setAuthUser(result.newUser);
       }
+      console.log(formData);
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +69,7 @@ const Register = () => {
             Its free and always will be
           </h2>
         </div>
-        <form action="" className="space-y-4 " onSubmit={handleSubmit}>
+        <form action="" className="space-y-4 " onSubmit={(e)=>handleSubmit(e)}>
           <label className="input input-bordered flex items-center gap-2">
             <input
               type="text"
@@ -105,7 +128,7 @@ const Register = () => {
               className="grow"
               placeholder="select profile image"
               name="image"
-              onChange={handleChange}
+              onChange={handleImageChange}
             />
           </label>
           <label className="input input-bordered flex items-center gap-2">
@@ -124,7 +147,6 @@ const Register = () => {
             <input
               type="password"
               className="grow"
-              value="password"
               name="password"
               onChange={handleChange}
             />
@@ -134,7 +156,9 @@ const Register = () => {
           </button>
         </form>
         <div>
-          <span>have an account ? login</span>
+          <span>
+            <Link to={"/login"}>have an account ? login</Link>
+          </span>
         </div>
       </div>
     </div>

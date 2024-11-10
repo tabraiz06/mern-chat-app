@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { contextApi } from "../../context/AuthPrivider";
 
 const Login = () => {
-  const [authUser, setAuthUser] = contextApi();
+  const { authUser, setAuthUser } = contextApi();
 
   console.log(authUser);
   const [userDetails, setUserDetails] = useState({
@@ -28,7 +28,9 @@ const Login = () => {
       const result = await res.json();
       console.log(result);
       if (res.ok) {
+        localStorage.setItem("token", result.Token);
         navigate("/");
+        setAuthUser(result.user);
       }
     } catch (error) {
       console.log(error);
@@ -95,7 +97,7 @@ const Login = () => {
         </form>
         <div>
           <span>
-            <Link>
+            <Link to={'/register'}>
               dont have an account ?
               <span className="text-white underline cursor-pointer mx-2">
                 Sign up
